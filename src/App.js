@@ -7,25 +7,19 @@ import Home from './Components/HomePage/HomePage';
 import Reports from './Components/Reports/Reports';
 import Settings from './Components/Settings/Settings';
 import About from './Components/About/About';
-import Volna from './Components/img/volna.jpeg'
 import './App.css';
 
 function App() {
 
 
   const [loggedInPark, setLoggedInPark] = useState(() => {
-    return localStorage.getItem('loggedInPark'); // <- читаем при запуске
+    return localStorage.getItem('loggedInPark');
   });
 
-  const users = {
-    parkFrunze: { username: 'adminApet', password: '1234' },
-    parkMorVokzal: { username: 'adminNarek', password: '1234' },
-    parkNeptun: { username: 'adminXunk', password: '1234' },
-  };
 
   const handleLogin = (parkName) => {
     setLoggedInPark(parkName);
-    localStorage.setItem('loggedInPark', parkName); // <- сохраняем в браузере
+    localStorage.setItem('loggedInPark', parkName);
   };
 
   const getLocalEmployees = () => {
@@ -35,14 +29,12 @@ function App() {
 
   const [employees, setEmployees] = useState([]);
 
-  // Обновляем список при входе
   React.useEffect(() => {
     if (loggedInPark) {
       setEmployees(getLocalEmployees());
     }
   }, [loggedInPark]);
 
-  // Сохраняем список при изменениях
   React.useEffect(() => {
     if (loggedInPark) {
       localStorage.setItem(`${loggedInPark}_employees`, JSON.stringify(employees));
@@ -58,10 +50,12 @@ function App() {
       <div className="App">
         <header className="header">
           <h1>Парк Аттракционов ВОЛНА</h1>
+          <h2>{loggedInPark}</h2>
           <button onClick={() => {
             localStorage.removeItem('loggedInPark');
             setLoggedInPark(null);
           }}>Выйти</button>
+
         </header>
 
         <nav className="menu">

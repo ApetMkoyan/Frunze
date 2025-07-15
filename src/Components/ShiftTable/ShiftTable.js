@@ -58,7 +58,7 @@ const ShiftTable = ({ park }) => {
   };
 
   return (
-    <div>
+    <div className='bodyTable'>
       <h2>Таблица смен</h2>
       <table>
         <thead>
