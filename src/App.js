@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react';
-import ShiftTable from './ShiftTable';
+import ShiftTable from './Components/ShiftTable/ShiftTable';
 
 
 function App() {
