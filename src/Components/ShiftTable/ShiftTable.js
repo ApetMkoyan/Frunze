@@ -1,71 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import './ShiftTable.css';
 
 const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
-const ShiftTable = () => {
-  const [rows, setRows] = useState([]);
+const ShiftTable = ({ park }) => {
+  const [shifts, setShifts] = useState({});
   const [editMode, setEditMode] = useState(false);
+  const [employees, setEmployees] = useState([]);
 
-  // Загружаем данные из localStorage при старте
   useEffect(() => {
-    const saved = localStorage.getItem('shiftTableData');
-    if (saved) {
-      setRows(JSON.parse(saved));
-    }
-  }, []);
+    fetch(`http://localhost:4000/employees/${park}`)
+      .then(res => res.json())
+      .then(setEmployees);
 
-  // Сохраняем данные при каждом изменении
+    fetch(`http://localhost:4000/shifts/${park}`)
+      .then(res => res.json())
+      .then(setShifts);
+  }, [park]);
+
   useEffect(() => {
-    localStorage.setItem('shiftTableData', JSON.stringify(rows));
-  }, [rows]);
+    // Удаляем смены для удалённых сотрудников
+    const filteredShifts = {};
+    employees.forEach(name => {
+      filteredShifts[name] = shifts[name] || Array(7).fill('');
+    });
+    setShifts(filteredShifts);
+  }, [employees]);
 
-  const handleAddRow = () => {
-    setRows([
-      ...rows,
-      {
-        id: uuidv4(),
-        name: '',
-        shifts: Array(7).fill(''),
-      },
-    ]);
+  const handleChange = (name, dayIdx, value) => {
+    const updated = {
+      ...shifts,
+      [name]: shifts[name].map((s, i) => (i === dayIdx ? value : s)),
+    };
+    setShifts(updated);
   };
 
-  const handleDeleteRow = (id) => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
-
-  const handleNameChange = (rowId, value) => {
-    setRows(rows.map((row) =>
-      row.id === rowId ? { ...row, name: value } : row
-    ));
-  };
-
-  const handleChange = (rowId, dayIndex, value) => {
-    setRows(rows.map((row) =>
-      row.id === rowId
-        ? {
-            ...row,
-            shifts: row.shifts.map((s, i) =>
-              i === dayIndex ? value : s
-            ),
-          }
-        : row
-    ));
-  };
-
-  const calculateSalary = (shifts) => {
-    return shifts.reduce((sum, value) => {
-      if (value === '+') return sum + 1500;
-      if (value === '1200') return sum + 1200;
-      if (value === '1000') return sum + 1000;
+  const calculateSalary = (row) => {
+    return row.reduce((sum, val) => {
+      if (val === '++') return sum + 2000;
+      if (val === 'ст') return sum + 1000;
+      if (val === 'касса1') return sum + 2500;
+      if (val === 'касса2') return sum + 3000;
+      if (val === '+') return sum + 1500;
+      if (val === '1200') return sum + 1200;
+      if (val === '1000') return sum + 1000;
       return sum;
     }, 0);
   };
 
-  const toggleEditMode = () => {
-    setEditMode(!editMode);
+  const handleSave = async () => {
+    await fetch(`http://localhost:4000/shifts/${park}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ shifts }),
+    });
+    setEditMode(false);
   };
 
   return (
@@ -76,56 +65,37 @@ const ShiftTable = () => {
           <tr>
             <th>#</th>
             <th>Сотрудник</th>
-            {days.map((day, idx) => (
-              <th key={idx}>{day}</th>
-            ))}
+            {days.map((d, i) => <th key={i}>{d}</th>)}
             <th>Зарплата</th>
-            <th>Удалить</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, rowIndex) => (
-            <tr key={row.id}>
-              <td>{rowIndex + 1}</td>
-              <td>
-                {editMode ? (
-                  <input
-                    value={row.name}
-                    onChange={(e) => handleNameChange(row.id, e.target.value)}
-                  />
-                ) : (
-                  row.name
-                )}
-              </td>
-              {row.shifts.map((shift, dayIndex) => (
-                <td key={dayIndex}>
+          {employees.map((name, i) => (
+            <tr key={name}>
+              <td>{i + 1}</td>
+              <td>{name}</td>
+              {shifts[name]?.map((s, j) => (
+                <td key={j}>
                   {editMode ? (
                     <input
-                      value={shift}
-                      onChange={(e) =>
-                        handleChange(row.id, dayIndex, e.target.value)
-                      }
+                      value={s}
+                      onChange={(e) => handleChange(name, j, e.target.value)}
                       style={{ width: '50px' }}
                     />
-                  ) : (
-                    shift
-                  )}
+                  ) : s}
                 </td>
               ))}
-              <td>{calculateSalary(row.shifts)}</td>
-              <td>
-                <button onClick={() => handleDeleteRow(row.id)}>Удалить</button>
-              </td>
+              <td>{calculateSalary(shifts[name] || [])}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <div style={{ marginTop: '20px' }}>
-        <button onClick={handleAddRow}>Добавить строку</button>
-        <button onClick={toggleEditMode} style={{ marginLeft: '10px' }}>
+      <div style={{ marginTop: 20 }}>
+        <button onClick={() => setEditMode(!editMode)}>
           {editMode ? 'Сохранить' : 'Редактировать'}
         </button>
+        {editMode && <button onClick={handleSave} style={{ marginLeft: 10 }}>Сохранить в базу</button>}
       </div>
     </div>
   );
