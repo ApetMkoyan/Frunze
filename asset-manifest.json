@@ -1,13 +1,14 @@
 {
   "files": {
-    "main.css": "/ApetMkoyan/Frunze/static/css/main.9cf1745f.css",
-    "main.js": "/ApetMkoyan/Frunze/static/js/main.a7f64597.js",
+    "main.css": "/ApetMkoyan/Frunze/static/css/main.0ba6affe.css",
+    "main.js": "/ApetMkoyan/Frunze/static/js/main.03ed5969.js",
+    "static/media/volna.jpeg": "/ApetMkoyan/Frunze/static/media/volna.d7f1b7e40415b18cb0d0.jpeg",
     "index.html": "/ApetMkoyan/Frunze/index.html",
-    "main.9cf1745f.css.map": "/ApetMkoyan/Frunze/static/css/main.9cf1745f.css.map",
-    "main.a7f64597.js.map": "/ApetMkoyan/Frunze/static/js/main.a7f64597.js.map"
+    "main.0ba6affe.css.map": "/ApetMkoyan/Frunze/static/css/main.0ba6affe.css.map",
+    "main.03ed5969.js.map": "/ApetMkoyan/Frunze/static/js/main.03ed5969.js.map"
   },
   "entrypoints": [
-    "static/css/main.9cf1745f.css",
-    "static/js/main.a7f64597.js"
+    "static/css/main.0ba6affe.css",
+    "static/js/main.03ed5969.js"
   ]
 }
