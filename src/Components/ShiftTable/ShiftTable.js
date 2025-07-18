@@ -8,6 +8,11 @@ const ShiftTable = ({ park }) => {
   const [editMode, setEditMode] = useState(false);
   const [employees, setEmployees] = useState([]);
 
+  // Временное хранение авансов
+  const [advances, setAdvances] = useState({
+    // Пример: 'Иванов': 3000, 'Петров': 0
+  });
+
   useEffect(() => {
     fetch(`http://localhost:4000/employees/${park}`)
       .then(res => res.json())
@@ -35,8 +40,8 @@ const ShiftTable = ({ park }) => {
     setShifts(updated);
   };
 
-  const calculateSalary = (row) => {
-    return row.reduce((sum, val) => {
+  const calculateSalary = (name, row) => {
+    const total = row.reduce((sum, val) => {
       if (val === '++') return sum + 2000;
       if (val === 'ст') return sum + 1000;
       if (val === 'касса1') return sum + 2500;
@@ -46,7 +51,13 @@ const ShiftTable = ({ park }) => {
       if (val === '1000') return sum + 1000;
       return sum;
     }, 0);
+    return total - (advances[name] || 0);
   };
+
+  const totalSalary = employees.reduce((sum, name) => {
+    const row = shifts[name] || [];
+    return sum + calculateSalary(name, row);
+  }, 0);
 
   const handleSave = async () => {
     await fetch(`http://localhost:4000/shifts/${park}`, {
@@ -85,17 +96,27 @@ const ShiftTable = ({ park }) => {
                   ) : s}
                 </td>
               ))}
-              <td>{calculateSalary(shifts[name] || [])}</td>
+              <td>{calculateSalary(name, shifts[name] || [])}</td>
             </tr>
           ))}
         </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={days.length + 2}><strong>Итого</strong></td>
+            <td><strong>{totalSalary}</strong></td>
+          </tr>
+        </tfoot>
       </table>
 
       <div style={{ marginTop: 20 }}>
         <button onClick={() => setEditMode(!editMode)}>
           {editMode ? 'Сохранить' : 'Редактировать'}
         </button>
-        {editMode && <button onClick={handleSave} style={{ marginLeft: 10 }}>Сохранить в базу</button>}
+        {editMode && (
+          <button onClick={handleSave} style={{ marginLeft: 10 }}>
+            Сохранить в базу
+          </button>
+        )}
       </div>
     </div>
   );
