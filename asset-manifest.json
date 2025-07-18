@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/ApetMkoyan/Frunze/static/css/main.e757fb3a.css",
-    "main.js": "/ApetMkoyan/Frunze/static/js/main.ca4e30a1.js",
+    "main.js": "/ApetMkoyan/Frunze/static/js/main.835162b4.js",
     "index.html": "/ApetMkoyan/Frunze/index.html",
     "main.e757fb3a.css.map": "/ApetMkoyan/Frunze/static/css/main.e757fb3a.css.map",
-    "main.ca4e30a1.js.map": "/ApetMkoyan/Frunze/static/js/main.ca4e30a1.js.map"
+    "main.835162b4.js.map": "/ApetMkoyan/Frunze/static/js/main.835162b4.js.map"
   },
   "entrypoints": [
     "static/css/main.e757fb3a.css",
-    "static/js/main.ca4e30a1.js"
+    "static/js/main.835162b4.js"
   ]
 }
