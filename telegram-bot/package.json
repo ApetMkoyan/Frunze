@@ -1,0 +1,26 @@
+{
+  "name": "park-management-telegram-bot",
+  "version": "1.0.0",
+  "description": "Telegram бот для управления парками аттракционов ВОЛНА",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "nodemon bot.js"
+  },
+  "dependencies": {
+    "node-telegram-bot-api": "^0.66.0",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "park",
+    "management",
+    "shifts"
+  ],
+  "author": "Разработчик системы парков",
+  "license": "MIT"
+}
