@@ -7,7 +7,7 @@ require('dotenv').config();
 
 // Создание Express приложения
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 10000;
 
 // Конфигурация
 const config = {
@@ -792,7 +792,9 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     timestamp: new Date().toISOString(),
     activeUsers: Object.keys(activeSessions).length,
-    totalParks: Object.keys(parksData).length
+    totalParks: Object.keys(parksData).length,
+    port: PORT,
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 
@@ -819,6 +821,7 @@ app.get('/status', (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 HTTP сервер запущен на порту ${PORT}`);
   console.log(`🌐 Доступен по адресу: http://localhost:${PORT}`);
+  console.log(`🌍 Слушает на всех интерфейсах: 0.0.0.0:${PORT}`);
   
   // Загрузка данных
   loadData();

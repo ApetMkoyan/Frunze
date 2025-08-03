@@ -5,11 +5,13 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "start:test": "node test-server.js",
     "start:basic": "node bot.js",
     "start:advanced": "node bot-advanced.js",
     "start:secure": "node bot-secure.js",
     "start:production": "node bot-production.js",
     "dev": "nodemon server.js",
+    "dev:test": "nodemon test-server.js",
     "dev:basic": "nodemon bot.js",
     "dev:advanced": "nodemon bot-advanced.js",
     "dev:secure": "nodemon bot-secure.js",
