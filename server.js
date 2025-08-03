@@ -17,9 +17,9 @@ function loadData() {
     parksData = JSON.parse(raw);
   } else {
     parksData = {
-      parkFrunze: { employees: [], shifts: {} },
-      parkMorVokzal: { employees: [], shifts: {} },
-      parkNeptun: { employees: [], shifts: {} },
+      parkFrunze: { employees: [], shifts: {}, machines: [] },
+      parkMorVokzal: { employees: [], shifts: {}, machines: [] },
+      parkNeptun: { employees: [], shifts: {}, machines: [] }
     };
     saveData();
   }
@@ -29,10 +29,8 @@ function saveData() {
   fs.writeFileSync(DATA_FILE, JSON.stringify(parksData, null, 2));
 }
 
-// Загрузить данные при запуске
 loadData();
 
-// Пользователи и парки
 const users = {
   adminApet: { password: '1234', park: 'parkFrunze' },
   adminNarek: { password: '4321', park: 'parkMorVokzal' },
@@ -49,29 +47,22 @@ app.post('/login', (req, res) => {
   }
 });
 
-// Получение сотрудников
 app.get('/employees/:park', (req, res) => {
   const park = req.params.park;
   res.json(parksData[park]?.employees || []);
 });
 
-// Добавление сотрудника
 app.post('/employees/:park', (req, res) => {
   const park = req.params.park;
   const { name } = req.body;
-
-  if (!name || !park) return res.status(400).json({ success: false });
-
   if (!parksData[park].employees.includes(name)) {
     parksData[park].employees.push(name);
     parksData[park].shifts[name] = Array(7).fill('');
     saveData();
   }
-
   res.json({ success: true });
 });
 
-// Удаление сотрудника
 app.delete('/employees/:park/:name', (req, res) => {
   const { park, name } = req.params;
   parksData[park].employees = parksData[park].employees.filter(n => n !== name);
@@ -80,13 +71,11 @@ app.delete('/employees/:park/:name', (req, res) => {
   res.json({ success: true });
 });
 
-// Получение смен
 app.get('/shifts/:park', (req, res) => {
   const park = req.params.park;
   res.json(parksData[park]?.shifts || {});
 });
 
-// Сохранение смен
 app.post('/shifts/:park', (req, res) => {
   const park = req.params.park;
   const { shifts } = req.body;
@@ -95,10 +84,46 @@ app.post('/shifts/:park', (req, res) => {
   res.json({ success: true });
 });
 
+// >>> МАШИНЫ: сохранение и история
+app.post('/machines/:park/history', (req, res) => {
+  const park = req.params.park;
+  const { from, to, hockeyAmount, boxerAmount } = req.body;
+
+  if (!parksData[park].machines) parksData[park].machines = [];
+
+  if (hockeyAmount) {
+    parksData[park].machines.push({ type: 'hockey', from, to, amount: hockeyAmount });
+  }
+
+  if (boxerAmount) {
+    parksData[park].machines.push({ type: 'boxer', from, to, amount: boxerAmount });
+  }
+
+  saveData();
+  res.json({ success: true });
+});
+
+app.get('/machines/:park/history', (req, res) => {
+  const park = req.params.park;
+  res.json(parksData[park]?.machines || []);
+});
+
 app.get('/', (req, res) => {
   res.send('Сервер работает. Используйте API через клиентское приложение.');
 });
 
+app.delete('/machines/:park/history/:index', (req, res) => {
+  const park = req.params.park;
+  const index = parseInt(req.params.index);
+
+  if (!data.machines[park] || !data.machines[park].history) {
+    return res.status(404).json({ message: 'История не найдена' });
+  }
+
+  data.machines[park].history.splice(index, 1);
+  saveData();
+  res.json({ message: 'Удалено' });
+});
 app.listen(PORT, () => {
-  console.log(`🚀 Сервер запущен на http://localhost:${PORT}`);
+  console.log(`🚀 Сервер работает на http://localhost:${PORT}`);
 });

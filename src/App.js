@@ -7,6 +7,7 @@ import Home from './Components/HomePage/HomePage';
 import Reports from './Components/Reports/Reports';
 import Settings from './Components/Settings/Settings';
 import About from './Components/About/About';
+import HockeyBoxer from './Components/HockeyBoxer/HockeyBoxer';
 import './App.css';
 
 function App() {
@@ -63,6 +64,7 @@ function App() {
           <Link to="/shift-table">Смены</Link>
           <Link to="/employees">Сотрудники</Link>
           <Link to="/reports">Отчёты</Link>
+          <Link to="/machines">Хоккей/Боксер</Link>
           <Link to="/settings">Настройки</Link>
         </nav>
 
@@ -77,9 +79,10 @@ function App() {
               path="/employees"
               element={<Employees employees={employees} setEmployees={setEmployees} park={loggedInPark} />}
             />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/about" element={<About />} />
+            <Route path='/machines' element={<HockeyBoxer park={loggedInPark} />} />
+            <Route path="/reports" element={<Reports park={loggedInPark} />} />
+            <Route path="/settings" element={<Settings park={loggedInPark} />} />
+            <Route path="/about" element={<About park={loggedInPark} />} />
           </Routes>
         </div>
       </div>

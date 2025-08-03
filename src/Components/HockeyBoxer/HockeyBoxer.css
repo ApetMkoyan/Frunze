@@ -1,0 +1,49 @@
+.hockey-boxer {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.hockey-section,
+.boxer-section {
+    margin-top: 20px;
+}
+
+.total {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.date-inputs label,
+.boxer-section label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.history-table {
+    margin-top: 30px;
+}
+
+.history-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.history-table th,
+.history-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+.history-table button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.history-table button:hover {
+    background-color: #c0392b;
+}
